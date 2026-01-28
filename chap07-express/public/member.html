@@ -7,5 +7,35 @@
   </head>
   <body>
     <h3>멤버페이지</h3>
+    <table border="2">
+      <thead>
+        <tr>
+          <th>아이디</th>
+          <th>이름</th>
+          <th>사진</th>
+        </tr>
+      </thead>
+      <tbody id="list"></tbody>
+    </table>
+
+    <script>
+      // 목록가져오기 위한 라우팅정보 확인.
+      fetch("list")
+        .then((resp) => resp.json())
+        .then((data) => {
+          // data 정보 확인.
+          data.forEach((elem) => {
+            document.querySelector("#list").insertAdjacentHTML(
+              "beforeend",
+              `<tr>
+                 <td>${elem.user_id}</td>
+                 <td>${elem.user_name}</td>
+                 <td><img width="100px" height="80px" src="images/${elem.user_img}"></td>
+               </tr>`,
+            );
+          });
+        })
+        .catch(console.log);
+    </script>
   </body>
 </html>

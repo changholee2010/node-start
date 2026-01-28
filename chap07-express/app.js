@@ -2,6 +2,8 @@ const express = require("express");
 const multer = require("multer");
 const app = express(); // 인스턴스.
 const crypto = require("crypto");
+const path = require("path");
+const fs = require("fs");
 
 const pool = require("./db");
 
@@ -51,10 +53,21 @@ app.post("/upload", upload.single("user_img"), (req, res) => {
   });
 });
 
+// 요청방식(post) , url(/login), req.body의 값.(id, pw)
+// pw => 암호화.
+// select count(*) as cnt from member where id=? and pw=?
+// 조회(1) => retCode:OK, 조회(0) => retCode:NG
+
+// 회원목록.
+app.get("/list", async (req, res) => {
+  let [result, sec] = await pool.query("select * from member");
+  res.json(result);
+});
+
 // 회원추가.
 app.post("/create", upload.single("user_img"), async (req, res) => {
   const { user_id, user_pw, user_nm } = req.body;
-  const file_name = req.file.filename;
+  const file_name = req.file ? req.file.filename : null; // 업로드 파일
   // 암호화 비번.
   let passwd = crypto.createHash("sha512").update(user_pw).digest("base64");
 
@@ -67,6 +80,15 @@ app.post("/create", upload.single("user_img"), async (req, res) => {
     // 반환결과.
     res.json({ retCode: "OK" });
   } catch (err) {
+    // 업로드된 이미지 삭제 처리.
+    const ufile = path.join(__dirname, "public/images", file_name);
+    fs.unlink(ufile, (err) => {
+      if (err) {
+        console.log(`파일 삭제중 error => ${err}`);
+      } else {
+        console.log(`파일 삭제 완료 => ${ufile}`);
+      }
+    });
     res.json({ retCode: "NG", retMsg: err.sqlMessage });
   }
 });
