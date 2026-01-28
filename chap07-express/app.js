@@ -66,11 +66,47 @@ app.post("/login", async (req, res) => {
   // 암호화 비번.
   let passwd = crypto.createHash("sha512").update(user_pw).digest("base64");
   let [result, sec] = await pool.query(
-    "select count(*) as cnt from member where user_id=? and user_pw=?",
+    "select user_name, responsibility from member where user_id=? and user_pw=?",
     [user_id, passwd],
   );
+  console.log(result);
   // 응답.
-  if (result[0].cnt > 0) {
+  if (result.length > 0) {
+    res.json({
+      retCode: "OK",
+      name: result[0].user_name,
+      role: result[0].responsibility,
+    });
+  } else {
+    res.json({ retCode: "NG" });
+  }
+});
+
+// 삭제.
+app.delete("/delete/:id", async (req, res) => {
+  const uid = req.params.id;
+  // 서버의 파일 삭제.
+  const [data, rows] = await pool.query(
+    "select user_img from member where user_id = ?",
+    [uid],
+  );
+  // 삭제쿼리.
+  const result = await pool.query("delete from member where user_id = ?", [
+    uid,
+  ]);
+  // 이미지삭제.
+  if (result[0].affectedRows) {
+    // 삭제된 회원의 이미지도 같이 지워주기.
+    const ufile = path.join(__dirname, "public/images", data[0].user_img);
+
+    fs.unlink(ufile, (err) => {
+      if (err) {
+        console.log(`${ufile} 삭제중 에러.`);
+      } else {
+        console.log(`${ufile} 삭제 완료.`);
+      }
+    });
+
     res.json({ retCode: "OK" });
   } else {
     res.json({ retCode: "NG" });
@@ -79,7 +115,9 @@ app.post("/login", async (req, res) => {
 
 // 회원목록.
 app.get("/list", async (req, res) => {
-  let [result, sec] = await pool.query("select * from member");
+  let [result, sec] = await pool.query(
+    "select * from member where responsibility = 'User'",
+  );
   res.json(result);
 });
 
