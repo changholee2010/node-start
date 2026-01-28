@@ -147,15 +147,15 @@
           if (result.retCode == "OK") {
             alert(`${result.name}님, 환영합니다!`);
             // 웹브라우저의 session에 값 지정.
-            localStorage.setItem("role", result.role);
-            localStorage.setItem("uid", username);
+            sessionStorage.setItem("role", result.role);
+            sessionStorage.setItem("uid", username);
 
             // 성공 시 메인 페이지로 이동 등 후속 처리
             location.href = "member.html";
           } else {
             alert("아이디 또는 비밀번호가 일치하지 않습니다.");
-            localStorage.removeItem("role"); // 지정된 값을 지우기.
-            localStorage.removeItem("uid");
+            sessionStorage.removeItem("role"); // 지정된 값을 지우기.
+            sessionStorage.removeItem("uid");
           }
         } catch (error) {
           console.error("에러 발생:", error);
