@@ -118,6 +118,23 @@
         transform: translateY(0);
         box-shadow: none;
       }
+
+      /* 삭제 버튼 비활성화 */
+      .btn-delete:disabled {
+        background-color: #ccc;
+        color: #888;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+        opacity: 0.7;
+      }
+
+      /* 비활성화 상태에서는 hover 효과 제거 */
+      .btn-delete:disabled:hover {
+        background-color: #ccc;
+        box-shadow: none;
+        transform: none;
+      }
     </style>
   </head>
   <body>
