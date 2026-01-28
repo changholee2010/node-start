@@ -184,7 +184,7 @@
         if (role == "Admin") {
           if (confirm("삭제하겠습니까?")) {
             // remove();
-            fetch("/delete/" + uid, { method: "delete" })
+            fetch("delete/" + uid, { method: "delete" })
               .then((resp) => resp.json())
               .then((data) => {
                 if (data.retCode == "OK") {
