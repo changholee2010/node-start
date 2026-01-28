@@ -59,8 +59,8 @@ app.post("/create", upload.single("user_img"), async (req, res) => {
     "insert into member(user_id,user_pw,user_name,user_img) values(?,?,?,?)",
     [user_id, user_pw, user_nm, file_name],
   );
-
-  res.send("done");
+  // 반환결과.
+  res.json({ retCode: "OK" });
 });
 
 // 실행.

@@ -27,24 +27,23 @@
         .addEventListener("submit", (e) => {
           e.preventDefault();
 
+          const user_id = document.querySelector('input[name="user_id"]').value;
+          const user_pw = document.querySelector('input[name="user_pw"]').value;
+          const user_nm = document.querySelector('input[name="user_nm"]').value;
+          const user_img = document.querySelector('input[name="user_img"]')
+            .files[0];
+
+          if (!user_id || !user_pw || !user_nm) {
+            alert("필수 항목 입력!");
+            return;
+          }
+
           // multipart 요청처리.
           const formData = new FormData();
-          formData.append(
-            "user_id",
-            document.querySelector('input[name="user_id"]').value,
-          );
-          formData.append(
-            "user_pw",
-            document.querySelector('input[name="user_pw"]').value,
-          );
-          formData.append(
-            "user_nm",
-            document.querySelector('input[name="user_nm"]').value,
-          );
-          formData.append(
-            "user_img",
-            document.querySelector('input[name="user_img"]').files[0],
-          );
+          formData.append("user_id", user_id); // formData의 user_id 속성과 값 추가.
+          formData.append("user_pw", user_pw);
+          formData.append("user_nm", user_nm);
+          formData.append("user_img", user_img);
 
           // formData => user_name: '홍길동', user_age: 22, user_img: File()
 
