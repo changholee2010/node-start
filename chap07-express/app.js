@@ -32,8 +32,10 @@ const upload = multer({ storage }); // multer 인스턴스.
 
 // public 폴더의 html, css, js url을 통해서 접근.
 app.use(express.static("public"));
-app.use(express.json()); // json 형태의 데이터 수신 가능.
-app.use(express.urlencoded({ extended: true })); // form 데이터 수신 가능.
+// json 형태의 데이터 수신 가능. application/json
+app.use(express.json());
+// form 데이터 수신 가능. application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
 
 // 라우팅. url : 실행함수.
 app.get("/", (req, res) => {
