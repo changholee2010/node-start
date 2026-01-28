@@ -54,7 +54,13 @@
           }) //
             .then((resp) => resp.json())
             .then((data) => {
-              console.log(data);
+              if (data.retCode == "OK") {
+                // 가입성공하면 member.html 이동.
+                location.href = "member.html";
+              } else {
+                // 실패하면 경고창 출력.
+                alert(data.retMsg);
+              }
             })
             .catch((err) => console.error(err));
         });

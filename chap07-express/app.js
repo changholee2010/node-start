@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const app = express(); // 인스턴스.
+const crypto = require("crypto");
 
 const pool = require("./db");
 
@@ -54,13 +55,20 @@ app.post("/upload", upload.single("user_img"), (req, res) => {
 app.post("/create", upload.single("user_img"), async (req, res) => {
   const { user_id, user_pw, user_nm } = req.body;
   const file_name = req.file.filename;
-  // db 입력.
-  let result = await pool.query(
-    "insert into member(user_id,user_pw,user_name,user_img) values(?,?,?,?)",
-    [user_id, user_pw, user_nm, file_name],
-  );
-  // 반환결과.
-  res.json({ retCode: "OK" });
+  // 암호화 비번.
+  let passwd = crypto.createHash("sha512").update(user_pw).digest("base64");
+
+  try {
+    // db 입력.
+    let result = await pool.query(
+      "insert into member(user_id,user_pw,user_name,user_img) values(?,?,?,?)",
+      [user_id, passwd, user_nm, file_name],
+    );
+    // 반환결과.
+    res.json({ retCode: "OK" });
+  } catch (err) {
+    res.json({ retCode: "NG", retMsg: err.sqlMessage });
+  }
 });
 
 // 실행.
