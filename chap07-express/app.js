@@ -32,6 +32,8 @@ const upload = multer({ storage }); // multer 인스턴스.
 
 // public 폴더의 html, css, js url을 통해서 접근.
 app.use(express.static("public"));
+app.use(express.json()); // json 형태의 데이터 수신 가능.
+app.use(express.urlencoded({ extended: true })); // form 데이터 수신 가능.
 
 // 라우팅. url : 실행함수.
 app.get("/", (req, res) => {
@@ -57,6 +59,21 @@ app.post("/upload", upload.single("user_img"), (req, res) => {
 // pw => 암호화.
 // select count(*) as cnt from member where id=? and pw=?
 // 조회(1) => retCode:OK, 조회(0) => retCode:NG
+app.post("/login", async (req, res) => {
+  const { user_id, user_pw } = req.body;
+  // 암호화 비번.
+  let passwd = crypto.createHash("sha512").update(user_pw).digest("base64");
+  let [result, sec] = await pool.query(
+    "select count(*) as cnt from member where user_id=? and user_pw=?",
+    [user_id, passwd],
+  );
+
+  if (result[0].cnt > 0) {
+    res.json({ retCode: "OK" });
+  } else {
+    res.json({ retCode: "NG" });
+  }
+});
 
 // 회원목록.
 app.get("/list", async (req, res) => {
