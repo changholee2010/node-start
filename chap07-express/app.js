@@ -67,7 +67,7 @@ app.post("/login", async (req, res) => {
     "select count(*) as cnt from member where user_id=? and user_pw=?",
     [user_id, passwd],
   );
-
+  // 응답.
   if (result[0].cnt > 0) {
     res.json({ retCode: "OK" });
   } else {
