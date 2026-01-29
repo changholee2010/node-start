@@ -46,7 +46,33 @@ app.get("/", (req, res) => {
 // 라우팅 파일.
 app.use("/sample", require("./routes/sample.route"));
 
-//
+// /members/guest@email.com
+app.get("/members/:to", async (req, res) => {
+  // to:수신자.
+  // member 테이블조회.
+  let [result, sec] = await pool.query(
+    "select * from member where responsibility = 'User'",
+  );
+  // 결과: result
+  let html = '<table border="2">';
+
+  // 메일발송.
+  transporter.sendMail(
+    {
+      from: process.env.FROM,
+      to,
+      subject: "회원목록",
+      html,
+    },
+    (err, info) => {
+      if (err) {
+        res.json({ retCode: "NG", retMsg: err });
+      }
+      res.json({ retCode: "OK", retMsg: info });
+    },
+  );
+  // 메일발송.
+});
 
 // 메일발송.
 app.post("/mail_send", upload.single("img"), (req, res) => {
@@ -80,7 +106,7 @@ app.post("/mail_send", upload.single("img"), (req, res) => {
       res.json({ retCode: "OK", retMsg: info });
     },
   );
-
+  // 메일발송.
   console.log("sendmail start==>");
 });
 
