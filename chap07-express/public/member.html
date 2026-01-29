@@ -161,8 +161,8 @@
     </div>
 
     <script>
-      const role = localStorage.getItem("role"); // role 속성으로 지정된 값.
-      const uid = localStorage.getItem("uid");
+      const role = sessionStorage.getItem("role"); // role 속성으로 지정된 값.
+      const uid = sessionStorage.getItem("uid");
       // DOM 객체.
       let txt = document.createTextNode("(당신은 손님입니다)");
       if (role || uid) {
