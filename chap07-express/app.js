@@ -1,12 +1,12 @@
 const express = require("express");
 const multer = require("multer");
-const app = express(); // 인스턴스.
 const crypto = require("crypto");
 const path = require("path");
 const fs = require("fs");
-
+const transporter = require("./extensions/nodemailer");
 const pool = require("./db");
 
+const app = express(); // 인스턴스.
 // 포트: 3000
 const SERVER_PORT = 3000;
 
@@ -44,6 +44,30 @@ app.get("/", (req, res) => {
 });
 // 라우팅 파일.
 app.use("/sample", require("./routes/sample.route"));
+
+// 메일발송.
+app.post("/mail_send", (req, res) => {
+  const { to, subject, text } = req.body;
+  // 메일발송.
+  transporter.sendMail(
+    {
+      from: "sample@email.com",
+      to,
+      subject,
+      text,
+    },
+    (err, info) => {
+      if (err) {
+        console.log("error", err);
+        res.json({ retCode: "NG", retMsg: err });
+      }
+      console.log(`ok`, info);
+      res.json({ retCode: "OK", retMsg: info });
+    },
+  );
+
+  console.log("sendmail start==>");
+});
 
 app.post("/upload", upload.single("user_img"), (req, res) => {
   console.log(req.body);

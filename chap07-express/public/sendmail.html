@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>메일 발송</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f6f8;
+      }
+      .mail-container {
+        width: 500px;
+        margin: 50px auto;
+        background: #fff;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin-top: 15px;
+        font-weight: bold;
+      }
+      input,
+      textarea {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      textarea {
+        height: 150px;
+        resize: none;
+      }
+      button {
+        width: 100%;
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="mail-container">
+      <h2>메일 발송</h2>
+
+      <form name="mailFrm" action="#" method="post">
+        <label for="sender">발신자</label>
+        <input
+          type="email"
+          id="sender"
+          name="sender"
+          value="sender@example.com"
+          required
+        />
+
+        <label for="receiver">수신자</label>
+        <input
+          type="email"
+          id="receiver"
+          name="receiver"
+          placeholder="receiver@example.com"
+          required
+        />
+
+        <label for="subject">제목</label>
+        <input type="text" id="subject" name="subject" required />
+
+        <label for="content">내용</label>
+        <textarea id="content" name="content" required></textarea>
+
+        <button type="submit">메일 보내기</button>
+      </form>
+    </div>
+
+    <script>
+      // form=>submit, button=>click
+      // method:post, url:mail_send, body: to, subject, text 값.
+      document
+        .querySelector("form[name=mailFrm]")
+        .addEventListener("submit", (e) => {
+          e.preventDefault(); // submit 이벤트 차단.
+
+          const to = document.querySelector("#receiver").value;
+          const subject = document.querySelector("#subject").value;
+          const text = document.querySelector("#content").value;
+          // 항목체크.
+          if (!to || !subject || !text) {
+            alert("필수항목 입력.");
+            return;
+          }
+          // Ajax 호출.
+          fetch("mail_send", {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ to, subject, text }),
+          })
+            .then((resp) => resp.json())
+            .then((data) => {
+              console.log(data);
+            })
+            .catch((err) => console.error(err));
+        });
+    </script>
+  </body>
+</html>
