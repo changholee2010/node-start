@@ -6,6 +6,7 @@ const path = require("path");
 const fs = require("fs");
 const transporter = require("./extensions/nodemailer");
 const pool = require("./db");
+const cron_job = require("./extensions/nodecron");
 
 const app = express(); // 인스턴스.
 // 포트: 3000
@@ -46,6 +47,20 @@ app.get("/", (req, res) => {
 // 라우팅 파일.
 app.use("/sample", require("./routes/sample.route"));
 
+// 스케줄잡 시작.
+app.get("/start", (req, res) => {
+  cron_job.start();
+  console.log("메일발송 시작됨.");
+  res.send("메일발송 시작됨.");
+});
+
+// 스케줄잡 종료.
+app.get("/end", (req, res) => {
+  cron_job.stop();
+  console.log("메일발송 종료됨.");
+  res.send("메일발송 종료됨.");
+});
+
 // /members/guest@email.com
 app.get("/members/:to", async (req, res) => {
   // to:수신자.
@@ -62,7 +77,10 @@ app.get("/members/:to", async (req, res) => {
   html += result
     .map(
       (elem) =>
-        `<tr><td>${elem.user_id}</td><td>${elem.user_name}</td><td>${elem.user_img}</td><td>${elem.responsibility}</td></tr>`,
+        `<tr><td style="color: red;">${elem.user_id}</td>
+             <td>${elem.user_name}</td>
+             <td>${elem.user_img}</td>
+             <td>${elem.responsibility}</td></tr>`,
     )
     .join("");
   html += "</tbody></table>";
