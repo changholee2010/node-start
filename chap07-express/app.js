@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const multer = require("multer");
 const crypto = require("crypto");
@@ -52,14 +53,24 @@ app.post("/mail_send", (req, res) => {
     .split("\n")
     .map((elem) => "<p>" + elem + "</p>")
     .join("");
-  console.log(html);
+
   // 메일발송.
   transporter.sendMail(
     {
-      from: "send@mail.com",
+      from: process.env.FROM,
       to,
       subject,
       html,
+      attachments: [
+        {
+          // filename: "손흥민_1769605587618.png",
+          path: path.join(
+            __dirname,
+            "public/images",
+            "손흥민_1769605587618.png",
+          ),
+        },
+      ],
     },
     (err, info) => {
       if (err) {
