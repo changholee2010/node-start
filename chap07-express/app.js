@@ -48,13 +48,18 @@ app.use("/sample", require("./routes/sample.route"));
 // 메일발송.
 app.post("/mail_send", (req, res) => {
   const { to, subject, text } = req.body;
+  const html = text
+    .split("\n")
+    .map((elem) => "<p>" + elem + "</p>")
+    .join("");
+  console.log(html);
   // 메일발송.
   transporter.sendMail(
     {
-      from: "sample@email.com",
+      from: "send@mail.com",
       to,
       subject,
-      html: text,
+      html,
     },
     (err, info) => {
       if (err) {
