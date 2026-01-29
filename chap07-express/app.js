@@ -54,7 +54,7 @@ app.post("/mail_send", (req, res) => {
       from: "sample@email.com",
       to,
       subject,
-      text,
+      html: text,
     },
     (err, info) => {
       if (err) {
