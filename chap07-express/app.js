@@ -49,12 +49,23 @@ app.use("/sample", require("./routes/sample.route"));
 // /members/guest@email.com
 app.get("/members/:to", async (req, res) => {
   // to:수신자.
+  const to = req.params.to;
   // member 테이블조회.
   let [result, sec] = await pool.query(
     "select * from member where responsibility = 'User'",
   );
   // 결과: result
   let html = '<table border="2">';
+  html +=
+    "<thead><tr><th>아이디</th><th>이름</th><th>이미지</th><th>권한</th></tr></thead>";
+  html += "<tbody>";
+  html += result
+    .map(
+      (elem) =>
+        `<tr><td>${elem.user_id}</td><td>${elem.user_name}</td><td>${elem.user_img}</td><td>${elem.responsibility}</td></tr>`,
+    )
+    .join("");
+  html += "</tbody></table>";
 
   // 메일발송.
   transporter.sendMail(
