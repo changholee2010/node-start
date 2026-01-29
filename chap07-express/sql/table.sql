@@ -10,7 +10,7 @@ create table member (
   user_img varchar(100),
   primary key (user_id)
 );
--- mroyxxhghljwhzaj
+-- 
 -- 글번호,제목,내용,작성자,일시 
 create table board (
   id int auto_increment primary key,
