@@ -58,68 +58,62 @@
     <div class="mail-container">
       <h2>메일 발송</h2>
 
-      <form name="mailFrm" action="#" method="post">
+      <form name="mailFrm">
         <label for="sender">발신자</label>
         <input
           type="email"
           id="sender"
           name="sender"
           value="sender@example.com"
-          required
         />
 
         <label for="receiver">수신자</label>
-        <input
-          type="email"
-          id="receiver"
-          name="receiver"
-          value="sample@email.com"
-          required
-        />
+        <input type="email" id="receiver" name="receiver" required />
 
         <label for="subject">제목</label>
-        <input
-          type="text"
-          id="subject"
-          name="subject"
-          value="mail test"
-          required
-        />
+        <input type="text" id="subject" name="subject" required />
 
         <label for="content">내용</label>
         <textarea id="content" name="content" required></textarea>
+
+        <label for="file">첨부파일</label>
+        <input type="file" id="file" name="file" />
 
         <button type="submit">메일 보내기</button>
       </form>
     </div>
 
     <script>
-      // form=>submit, button=>click
-      // method:post, url:mail_send, body: to, subject, text 값.
       document
         .querySelector("form[name=mailFrm]")
         .addEventListener("submit", (e) => {
-          e.preventDefault(); // submit 이벤트 차단.
+          e.preventDefault();
 
-          const to = document.querySelector("#receiver").value;
-          const subject = document.querySelector("#subject").value;
-          const text = document.querySelector("#content").value;
-          // 항목체크.
-          if (!to || !subject || !text) {
-            alert("필수항목 입력.");
-            return;
+          // multipart요청.
+          const formData = new FormData();
+          formData.append("to", document.querySelector("#receiver").value);
+          formData.append("subject", document.querySelector("#subject").value);
+          formData.append("text", document.querySelector("#content").value);
+
+          // 파일첨부.
+          const fileInput = document.querySelector("#file");
+          if (fileInput.files.length > 0) {
+            formData.append("img", fileInput.files[0]);
           }
-          // Ajax 호출.
+
           fetch("mail_send", {
-            method: "post",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ to, subject, text }),
+            method: "POST",
+            body: formData, // multipart/form-data
           })
             .then((resp) => resp.json())
             .then((data) => {
               console.log(data);
+              alert("메일 발송 완료");
             })
-            .catch((err) => console.error(err));
+            .catch((err) => {
+              console.error(err);
+              alert("메일 발송 실패");
+            });
         });
     </script>
   </body>

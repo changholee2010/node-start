@@ -46,9 +46,13 @@ app.get("/", (req, res) => {
 // 라우팅 파일.
 app.use("/sample", require("./routes/sample.route"));
 
+//
+
 // 메일발송.
-app.post("/mail_send", (req, res) => {
+app.post("/mail_send", upload.single("img"), (req, res) => {
   const { to, subject, text } = req.body;
+  console.log(req.file.filename);
+
   const html = text
     .split("\n")
     .map((elem) => "<p>" + elem + "</p>")
@@ -63,12 +67,7 @@ app.post("/mail_send", (req, res) => {
       html,
       attachments: [
         {
-          // filename: "손흥민_1769605587618.png",
-          path: path.join(
-            __dirname,
-            "public/images",
-            "손흥민_1769605587618.png",
-          ),
+          path: path.join(__dirname, "public/images", req.file.filename),
         },
       ],
     },
