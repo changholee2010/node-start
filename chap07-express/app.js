@@ -21,8 +21,9 @@ const storage = multer.diskStorage({
   },
   // 파일이름.
   filename: (req, file, cb) => {
-    const file_name = Buffer.from(file.originalname, "latin1") //
-      .toString("utf-8");
+    const file_name = Buffer.from(file.originalname, "latin1").toString(
+      "utf-8",
+    );
     // 키보드_12131312390.png
     const fn = file_name.substring(0, file_name.indexOf("."));
     const ext = file_name.substring(file_name.indexOf("."));
