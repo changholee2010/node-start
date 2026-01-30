@@ -48,7 +48,7 @@ const storage1 = multer.diskStorage({
 });
 
 const upload = multer({ storage }); // multer 인스턴스.
-const upload1 = multer({ storage1 }); // multer 인스턴스.
+const upload1 = multer({ storage: storage1 }); // multer 인스턴스.
 
 // public 폴더의 html, css, js url을 통해서 접근.
 app.use(express.static("public"));
