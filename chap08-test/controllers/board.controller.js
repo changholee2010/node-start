@@ -2,18 +2,9 @@
 const svc = require("../services/board.service");
 
 const ctrl = {
-  list: async (req, res) => {
-    const result = svc.list();
-    res.send(result);
-  },
-  create: async (req, res) => {
-    const result = svc.create({});
-    res.send(result);
-  },
-  remove: async (req, res) => {
-    const result = svc.remove("");
-    res.send(result);
-  },
+  list: async (req, res) => {},
+  create: async (req, res) => {},
+  remove: async (req, res) => {},
 };
 
 module.exports = ctrl;
