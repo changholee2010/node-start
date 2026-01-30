@@ -60,6 +60,7 @@ app.use(express.urlencoded({ extended: true }));
 // 라우팅. url : 실행함수.
 app.get("/", (req, res) => {
   // 실행할 기능.
+  cron_job.stop();
   res.send("/ 페이지 호출");
 });
 // 라우팅 파일.
