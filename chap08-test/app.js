@@ -9,7 +9,7 @@ app.get("/", (req, res) => {
   res.send("/ Server 실행.");
 });
 
-app.use("/boards", boardRoute); // 라우팅정보.
+app.use("/board", boardRoute); // 라우팅정보.
 
 app.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);
